@@ -6,8 +6,10 @@
 require("donations.php");
 require("ipnlistener.php");
 
+include("config.php");
+
 $listener = new IpnListener();
-$listener->use_sandbox = true;
+$listener->use_sandbox = PAYPAL_USE_SANDBOX || false;
 
 try {
   $verified = $listener->processIpn();

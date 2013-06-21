@@ -1,5 +1,7 @@
 <?php
-// storage constants
+include("config.php");
+
+// default config values
 if (! defined("DATA_DIR")) {
 	define("DATA_DIR", __DIR__ . "/data/");
 }

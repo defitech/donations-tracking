@@ -3,7 +3,7 @@
  * Minimal tests for donations tracking.
  */
 
-// testing boilerplate
+// boilerplate setup
 
 $ok = TRUE;
 assert_options(ASSERT_CALLBACK, 'assert_handler');
@@ -13,22 +13,26 @@ function assert_handler($file, $line, $code, $desc = null)
   $ok = FALSE;
 }
 
-echo_section("Donations");
-
 require(__DIR__ . "/../source/donations.php");
 
-$id = 'test';
-$logFile = __DIR__ . "/../source/data/donations.log";
-$totalFile = __DIR__ . "/../source/data/total-" . $id . ".txt";
+echo_section("Config");
+echo_item("DATA_DIR=" . DATA_DIR);
+echo_item("LOG_FILE=" . LOG_FILE);
+echo_item("PAYPAL_USE_SANDBOX=" . (PAYPAL_USE_SANDBOX ? "true" : "false"));
 
 // test
 
+$id = 'test';
+$totalFile = DATA_DIR . "total-" . $id . ".txt";
+
 cleanup();
+
+echo_section("Donations");
 
 echo_item("Donations::log");
 $testMessage = "Test message";
 Donations::log($testMessage);
-assert(file_get_contents($logFile) == $testMessage . "\n");
+assert(file_get_contents(LOG_FILE) == $testMessage . "\n");
 
 echo_item("Donations::getTotal");
 assert(Donations::getTotal($id) == 0);
@@ -56,12 +60,12 @@ function echo_item($text) {
 }
 
 function cleanup() {
-	global $totalFile, $logFile;
+	global $totalFile;
 	if (file_exists($totalFile)) {
 		unlink($totalFile);
 	}
-	if (file_exists($logFile)) {
-		unlink($logFile);
+	if (file_exists(LOG_FILE)) {
+		unlink(LOG_FILE);
 	}
 }
 
